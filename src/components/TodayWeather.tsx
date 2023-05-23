@@ -22,7 +22,7 @@ export default function NineDaysForecast() {
   const [currentWeatherReport] = createResource(lang, CurrentWeatherReport);
 
   return (
-    <main class="text-white fontFamily drop-shadow-2xl ">
+    <main class="text-white font-inter drop-shadow-2xl ">
       <img src="test.svg" alt="" class="h-20" />
 
       <span class="text-[164px] leading-[120%] text-shadow">

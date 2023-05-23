@@ -13,52 +13,68 @@ import language from "~/context/language";
 export default function NineDaysForecast() {
   const { lang, changeLan } = language;
 
-  const options = {
-    en: "en",
-    tc: "tc",
-    sc: "sc",
+  const title = {
+    en: "General Situation:",
+    tc: "天氣概況:",
+    sc: "天气概况:",
   };
   const [nineDaysForecasting] = createResource(lang, NineDaysForecasting);
 
   return (
-    <main class="text-center mx-auto text-gray-700 p-4 flex">
-      <For each={nineDaysForecasting()?.weatherForecast}>
-      {(info) => (
-           <div class=""
-         >
-           <div class="h-full ">
-            <div class="text-center">
-            <img
-            class="block w-auto"
-               src={`https://www.hko.gov.hk/images/HKOWxIconOutline/pic${info.ForecastIcon}.png`}
-               width={70}
-               height={70}
-               alt="Picture of the author"
-             />
-            </div>
-          
-             <div>{info.week}</div>
-             <div>{info.forecastDate}</div>
-             <div>{info.forecastWind}</div>
-             <div>{info.forecastWeather}</div>
+    <main class=" bg-white p-[20px] border-[1px] border-solid border-[#ccc]">
+      <div>
+        <p class="text-[#faa330] pb-[5px] mb-[12px] text-[1.4em]">{title[`${lang()}`]}</p>
+        <span class="text-[120%]">{nineDaysForecasting()?.generalSituation}</span>
+      </div>
+      <div class="text-center flex gap-[2px] justify-center">
+        <For each={nineDaysForecasting()?.weatherForecast}>
+          {(info) => (
+            <div class= "w-[130px]  h-auto  border-solid border-[2px] mx-[2px] mt-[10px] mb-[2px] pt-[5px]  border-[#1F97FF]">
+              <div class="text-center">
+                <p class="text-[20.8px]">{info.forecastDate}</p>
+                <p class="text-[20.8px]">{"(" + info.week + ")"}</p>
+                  <div class="bg-[#1d496e] flex justify-center ">
+                    <img
+                      class=""
+                      src={`https://www.hko.gov.hk/images/HKOWxIconOutline/pic${info.ForecastIcon}.png`}
+                      width={50}
+                      height={50}
+                      alt="Picture of the author"
+                    />
+                  </div>
+              </div>
+              <p class="text-[20.8px]">
+                {info.forecastMintemp.value +
+                  " | " +
+                  info.forecastMaxtemp.value +
+                  "℃"}
+              </p>
+              <p class="text-[20.8px]">
+                {info.forecastMinrh.value +
+                  "-" +
+                  info.forecastMaxrh.value +
+                  "%"}
+              </p>
+              <div class="flex py-[15px] justify-center">
+                <div class="w-[40px]">
+                  <img
+                    class=""
+                    src={`https://www.hko.gov.hk/common/images/PSR${info.PSR.replace(
+                      " ",
+                      ""
+                    )}_50_light.png`}
+                    alt=""
+                  />
+                </div>
 
-             <div>
-               {info.forecastMintemp.value +
-                 "℃ | " +
-                 info.forecastMaxtemp.value +
-                 "℃"}
-             </div>
-             <div>
-               {info.forecastMinrh.value +
-                 "-" +
-                 info.forecastMaxrh.value +
-                 "%"}
-             </div>
-           </div>
-         </div>
-        )}
-       
-      </For>
+                <span class="pl-[3px]  my-auto text-[16px]">{info.PSR}</span>
+              </div>
+              <div class="p-[6px] min-h-[155px]">{info.forecastWind}</div>
+              <div class="pl-[6px] pr-[5px]">{info.forecastWeather}</div>
+            </div>
+          )}
+        </For>
+      </div>
     </main>
   );
 }

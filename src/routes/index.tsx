@@ -10,18 +10,15 @@ import {
 } from "solid-js";
 import GeneralReport from "~/components/GeneralReport";
 import NineDaysForecast from "~/components/NineDaysForecast";
-import "./index.css";
 import TodayWeather from "~/components/TodayWeather";
 export default function Home() {
   return (
-    <main class=" bg-gradient-to-tr from-[#F0B5CE] to-[#8C6BAE] ">
+    <main class=" bg-[#ebf3f6]">
       <div class="flex">
-        <div class="w-[60%] h-[100vh] ">
-          <TodayWeather />
+        <div class="bg-[#ebf3f6] px-[40px] ">
+          <NineDaysForecast/>
         </div>
-        <div class="test  w-[40%] h-[100vh]">
-          <div class=" ">ds</div>
-        </div>
+   
       </div>
       {/* <GeneralReport />
       <p class="mt-8">
