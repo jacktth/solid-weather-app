@@ -60,7 +60,33 @@ export type FndResponse = {
   generalSituation: string;
   //九天天氣預報; nine days forecasting
   weatherForecast: DayWeatherForecast[];
+  updateTime:string
+  soilTemp:SoilTemp[]
+  seaTemp:SeaTemp
 };
+
+interface SeaTemp {
+  place: string;
+  value: number;
+  unit: string;
+  recordTime: string; 
+}
+
+interface SoilTemp {
+  place: string;
+  value: number;
+  unit: string;
+  recordTime: string; 
+  depth: {
+    unit: string;
+    value: number;
+  };
+}
+
+interface WeatherData {
+  seaTemp: SeaTemp;
+  soilTemp: SoilTemp[];
+}
 
 export type ResponseType<T extends DataType> = T extends "flw"
   ? FlwResponse
@@ -123,3 +149,5 @@ export type AreaWeatherData = {
     }[];
   };
 };
+
+

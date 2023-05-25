@@ -12,9 +12,130 @@ import { NineDaysForecasting } from "~/routes/api";
 import { FndResponse, Language } from "~/routes/types";
 import language from "~/context/language";
 import Chart from "./Chart";
-
+interface SeaSoliTempProps {
+  lang: Accessor<Language>;
+  nineDaysForecasting: Resource<FndResponse>;
+}
 export default function NineDaysForecast() {
   const { lang, changeLan } = language;
+  const [nineDaysForecasting] = createResource(lang, NineDaysForecasting);
+
+  const SeaTempComponent = ({
+    lang,
+    nineDaysForecasting,
+  }: SeaSoliTempProps) => {
+    switch (lang()) {
+      case "en":
+        return (
+          <div class="bg-[#f7f7f7] p-[10px] mr-[20px]">
+            <p>Sea surface temperature</p>
+            <p>
+              {
+                formatTime(nineDaysForecasting()?.seaTemp.recordTime, lang)
+                  .seaSoilFormat
+              }
+              {" at " + `${nineDaysForecasting()?.seaTemp.place} :`}
+            </p>
+            <p class="text-[#0000ff] font-bold">{`${
+              nineDaysForecasting()?.seaTemp.value
+            } °C`}</p>
+          </div>
+        );
+      case "tc":
+        return (
+          <div class="bg-[#f7f7f7] p-[10px] mr-[20px]">
+            <p>
+              {
+                formatTime(nineDaysForecasting()?.seaTemp.recordTime, lang)
+                  .seaSoilFormat
+              }
+              {`${
+                nineDaysForecasting()?.seaTemp.place
+              } 錄 得 之 海 水 溫 度 為 :`}
+            </p>
+            <p class="text-[#0000ff] font-bold">{`${
+              nineDaysForecasting()?.seaTemp.value
+            } °C`}</p>
+          </div>
+        );
+      case "sc":
+        return (
+          <div class="bg-[#f7f7f7] p-[10px] mr-[20px]">
+            <p>
+              {
+                formatTime(nineDaysForecasting()?.seaTemp.recordTime, lang)
+                  .seaSoilFormat
+              }
+              {`${
+                nineDaysForecasting()?.seaTemp.place
+              } 录 得 之 海 水 温 度 为 :`}
+            </p>
+            <p class="text-[#0000ff] font-bold">{`${
+              nineDaysForecasting()?.seaTemp.value
+            } °C`}</p>
+          </div>
+        );
+
+      default:
+        break;
+    }
+  };
+  const SoilTempComponent = ({
+    lang,
+    nineDaysForecasting,
+  }: SeaSoliTempProps) => {
+    const soilUpper = nineDaysForecasting()?.soilTemp[0];
+    const soilLower = nineDaysForecasting()?.soilTemp[1];
+    if (soilUpper && soilLower) {
+      switch (lang()) {
+        case "en":
+          return (
+            <div class="bg-[#f7f7f7] p-[10px] mr-[20px]">
+              <p>Soil temperatures</p>
+              <p>
+                {formatTime(soilUpper.recordTime, lang).seaSoilFormat}
+                {" at " + `${soilUpper.place} :`}
+              </p>
+              <p class="text-[#bc8d79] font-bold">{`${soilUpper.depth.value}m depth:${soilUpper.value}°C`}</p>
+              <p class="text-[#bc8d79] font-bold">{`${soilLower.depth.value.toFixed(1)}m depth:${soilLower.value}°C`}</p>
+            </div>
+          );
+        case "tc":
+          return (
+            <div class="bg-[#f7f7f7] p-[10px] mr-[20px]">
+              <p>
+                {formatTime(soilLower.recordTime, lang).seaSoilFormat}
+                {`${soilLower.place}  錄 得 之 土 壤 溫 度 為 :`}
+              </p>
+              <p class="text-[#bc8d79] font-bold">{`${soilUpper.depth.value} 米 ${soilUpper.unit}:${soilUpper.value} 度`}</p>
+              <p class="text-[#bc8d79] font-bold">{`${soilLower.depth.value.toFixed(1)} 米 ${soilLower.unit}:${soilLower.value}.0 度`}</p>
+            </div>
+          );
+        case "sc":
+          return (
+            <div class="bg-[#f7f7f7] p-[10px] mr-[20px]">
+              <p>
+                {formatTime(soilLower.recordTime, lang).seaSoilFormat}
+                {`${soilLower.place}  录 得 之 土 壤 温 度 为 :`}
+              </p>
+              <p class="text-[#bc8d79] font-bold">{`${soilUpper.depth.value} 米 ${soilUpper.unit}:${soilUpper.value} 度`}</p>
+              <p class="text-[#bc8d79] font-bold">{`${soilLower.depth.value.toFixed(1)} 米 ${soilLower.unit}:${soilLower.value} 度`}</p>
+            </div>
+          );
+
+        default:
+          break;
+      }
+    } else {
+      return "";
+    }
+  };
+
+  const updateTime = {
+    en: "Updated at： ",
+    tc: "更新時間： ",
+    sc: "更新时间： ",
+  };
   const subTitle = {
     en: "General Situation:",
     tc: "天氣概況:",
@@ -25,13 +146,48 @@ export default function NineDaysForecast() {
     tc: "香港九天天氣預報:",
     sc: "香港九天天气预报:",
   };
-  const [nineDaysForecasting] = createResource(lang, NineDaysForecasting);
+  function formatTime(time: string | undefined, lang: Accessor<Language>) {
+    if (time) {
+      const date = new Date(time);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hour = String(date.getHours()).padStart(2, "0");
+      const minute = String(date.getMinutes()).padStart(2, "0");
+      switch (lang()) {
+        case "en":
+          const enMonth = date.toLocaleString("en-US", { month: "short" });
+          const amPm = +hour >= 12 ? "PM" : "AM";
+          const formattedHours =
+            +hour % 12 === 0 ? "12" : "0" + String(+hour % 12);
+          return {
+            nineDaysForecastFormat: `${hour}:${minute} HKT ${day}/${enMonth}/${year}`,
+            seaSoilFormat: `${
+              formattedHours + " " + amPm
+            } on ${day}/${enMonth}/${year}`,
+          };
+
+        default:
+          const amPmCn = +hour >= 12 ? "下午" : "上午";
+          const formattedHoursCn = +hour % 12 === 0 ? "12" : String(+hour % 12);
+          return {
+            nineDaysForecastFormat: `${year}年${month}月${day}日${hour}時${minute}分`,
+            seaSoilFormat: `${year}年${month}月${day}日 ${amPmCn} ${formattedHoursCn}時$`,
+          };
+      }
+    } else {
+      return {
+        nineDaysForecastFormat: `N/A`,
+        seaSoilFormat: `N/A`,
+      };
+    }
+  }
   function formatWeek(weekString: string, lang: Accessor<Language>) {
     switch (lang()) {
       case "en":
         const week = weekString.slice(0, 3);
 
-        return week;
+        return `(${week})`;
 
       default:
         return weekString;
@@ -112,7 +268,10 @@ export default function NineDaysForecast() {
     };
   }
 
-  function getHumidityArray(nineDaysForecasting: Resource<FndResponse>) {
+  function getHumidityArray(
+    nineDaysForecasting: Resource<FndResponse>,
+    lang: Accessor<Language>
+  ) {
     const text = {
       en: {
         max: "maximum relative humidity",
@@ -218,11 +377,37 @@ export default function NineDaysForecast() {
           </For>
         </div>
         <Chart
-          data={getHumidityArray(nineDaysForecasting).data}
-          categories={getHumidityArray(nineDaysForecasting).categories}
+          data={getHumidityArray(nineDaysForecasting, lang).data}
+          categories={getHumidityArray(nineDaysForecasting, lang).categories}
           type="line"
-          title={getHumidityArray(nineDaysForecasting).title}
+          title={getHumidityArray(nineDaysForecasting, lang).title}
         />
+        <Chart
+          data={getTempArray(nineDaysForecasting, lang).data}
+          categories={getTempArray(nineDaysForecasting, lang).categories}
+          type="line"
+          title={getTempArray(nineDaysForecasting, lang).title}
+        />
+        <div class="flex justify-end">
+          <p>
+            {updateTime[`${lang()}`]}
+            {
+              formatTime(nineDaysForecasting()?.updateTime, lang)
+                .nineDaysForecastFormat
+            }
+          </p>
+        </div>
+        <div class="flex">
+          <SeaTempComponent
+            lang={lang}
+            nineDaysForecasting={nineDaysForecasting}
+          />
+          <SoilTempComponent
+            lang={lang}
+            nineDaysForecasting={nineDaysForecasting}
+          />
+        </div>
+        <div></div>
       </main>
     </div>
   );
