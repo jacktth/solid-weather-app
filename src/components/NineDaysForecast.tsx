@@ -168,10 +168,10 @@ export default function NineDaysForecast() {
   };
   const ColumnNineDaysForecasting = () => {
     return (
-      <div class="text-center flex gap-[2px] justify-center">
+      <div class="text-center flex gap-[2px] justify-center overflow-auto">
         <For each={nineDaysForecasting()?.weatherForecast}>
           {(info) => (
-            <div class="w-[130px]  h-auto  border-solid border-[2px] mx-[2px] mt-[10px] mb-[2px] pt-[5px]  border-[#1F97FF]">
+            <div class="sm:w-[130px]  h-auto  border-solid border-[2px] mx-[2px] mt-[10px] mb-[2px] pt-[5px]  border-[#1F97FF]">
               <div class="text-center">
                 <p class="text-[20.8px]">
                   {formatDate(info.forecastDate, lang)}
@@ -200,7 +200,7 @@ export default function NineDaysForecast() {
                   "%"}
               </p>
               <div class="flex py-[15px] justify-center">
-                <div class="w-[40px]">
+                <div class="sm:w-[40px]">
                   <img
                     class=""
                     src={`https://www.hko.gov.hk/common/images/PSR${info.PSR.replace(
@@ -227,7 +227,7 @@ export default function NineDaysForecast() {
         <For each={nineDaysForecasting()?.weatherForecast}>
           {(info) => (
             <div class="w-auto  h-auto flex  border-solid border-[2px] mx-[2px] mt-[10px] mb-[2px]  border-[#1F97FF]">
-              <div class="flex items-center text-start w-[15%] p-[5px]">
+              <div class="flex items-center text-start sm:w-[15%] p-[5px]">
                 <span class="text-[20.8px]">
                   {formatDate(info.forecastDate, lang)}
                   <br />
@@ -235,7 +235,7 @@ export default function NineDaysForecast() {
                 </span>
               </div>
 
-              <div class="bg-[#1d496e] w-[10%] flex items-center justify-center px-[10px] py-[35px] ">
+              <div class="bg-[#1d496e] sm:w-[10%] flex items-center justify-center px-[10px] py-[35px] ">
                 <img
                   class="m-[6px]"
                   src={`https://www.hko.gov.hk/images/HKOWxIconOutline/pic${info.ForecastIcon}.png`}
@@ -259,7 +259,7 @@ export default function NineDaysForecast() {
                       info.forecastMaxrh.value +
                       "%"}
                   </p>
-                  <div class="w-[40px] p-[5px] ">
+                  <div class="sm:w-[40px] p-[5px] ">
                     <img
                       class=""
                       src={`https://www.hko.gov.hk/common/images/PSR${info.PSR.replace(
@@ -439,9 +439,9 @@ export default function NineDaysForecast() {
     };
   }
   return (
-    <div class="bg-[#ebf3f6] w-full flex justify-center font-sans">
-      <div class=" px-[40px] max-w-[1280px]">
-        <div class="flex justify-between content-center font-heavy">
+    <div class="bg-[#ebf3f6]  ">
+      <div class=" px-[40px] sm:max-w-[1280px] w-[90%] mx-auto ">
+        <div class="flex justify-between content-center text-[1.8em] font-700">
           <h1 class="mb-[25px] text-[#073e7f] ">
             {translate.title[`${lang()}`]}
           </h1>
@@ -468,9 +468,9 @@ export default function NineDaysForecast() {
             </div>
           </Show>
         </div>
-        <main class=" bg-white p-[20px] border-[1px] border-solid border-[#ccc]">
+        <main class=" bg-white p-[20px] border-[1px] border-solid border-[#ccc] font-400">
           <div>
-            <p class="text-[#faa330] pb-[5px] mb-[12px] text-[1.4em]">
+            <p class="text-[#faa330] pb-[5px] mb-[12px]  font-700 text-[1.4em]">
               {translate.subTitle[`${lang()}`]}
             </p>
             <span class="text-[120%]">
