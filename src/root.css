@@ -19,3 +19,9 @@
   .font-inter {
     font-family: 'Inter', sans-serif;
   }
+
+    
+  .font-heavy {
+    font-weight: 800;
+    font-size: 1.8em;
+  }

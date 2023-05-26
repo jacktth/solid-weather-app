@@ -88,11 +88,12 @@ const Chart = ({ data, categories, type, title }: ChartProps) => {
   return (
     <SolidApexCharts
       width="100%"
-      height="50%"
+      height="100%"
       type={type}
       options={options}
       series={series.list}
     />
+
   );
 };
 

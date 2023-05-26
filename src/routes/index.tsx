@@ -14,7 +14,7 @@ import TodayWeather from "~/components/TodayWeather";
 export default function Home() {
   return (
     <main class=" ">
-      <div class="flex">
+      <div class="">
         <div class="">
           <NineDaysForecast/>
         </div>
