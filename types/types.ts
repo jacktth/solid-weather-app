@@ -1,3 +1,5 @@
+import { Accessor, Resource } from "solid-js";
+
 export type DataType =
   | "flw"
   | "fnd"
@@ -65,14 +67,14 @@ export type FndResponse = {
   seaTemp:SeaTemp
 };
 
-interface SeaTemp {
+type SeaTemp =  {
   place: string;
   value: number;
   unit: string;
   recordTime: string; 
 }
 
-interface SoilTemp {
+type SoilTemp = {
   place: string;
   value: number;
   unit: string;
@@ -83,9 +85,10 @@ interface SoilTemp {
   };
 }
 
-interface WeatherData {
-  seaTemp: SeaTemp;
-  soilTemp: SoilTemp[];
+
+export interface SeaSoliTempProps {
+  lang: Accessor<Language>,
+  nineDaysForecasting: Resource<FndResponse>
 }
 
 export type ResponseType<T extends DataType> = T extends "flw"

@@ -1,5 +1,5 @@
 import { createRouteData } from "solid-start/data/createRouteData";
-import { FndResponse, Language, AreaWeatherData } from "./types";
+import { FndResponse, Language, AreaWeatherData } from "../../types/types";
 import { createServerData$ } from "solid-start/server/server";
 
 export const NineDaysForecasting = async (
