@@ -25,6 +25,7 @@ type ChartProps = {
   categories: string[][];
   type: ChartType;
   title: string;
+  titleColor:string;
 };
 
 type ChartData = {
@@ -32,20 +33,32 @@ type ChartData = {
   data: number[];
 }[];
 
-const Chart = ({ data, categories, type, title }: ChartProps) => {
+const Chart = ( props: ChartProps) => {
   const [options] = createStore({
     chart: {
-      id: "solidchart-example",
+      id: "chart",
       toolbar: {
         show: false,
       },
     },
     xaxis: {
-      categories: categories,
-    },
+      categories: props.categories,
+      labels:{
+        style:{
+          colors:"#666666",
+          fontSize: '16px',
+          fontFamily:'Lucida Grande, Lucida Sans Unicode, Arial, Helvetica, sans-serif',
+        }
+      }
+    } as ApexXAxis,
     title: {
-      text: title,
+      text: props.title,
       align: "center" as ApexTitleSubtitle["align"],
+      style:{
+        fontWeight:  700,
+        fontSize:"16px",
+        color:props.titleColor
+      }
     },
     dataLabels: {
       enabled: true,
@@ -63,7 +76,7 @@ const Chart = ({ data, categories, type, title }: ChartProps) => {
     markers: {
       size: [7, 7],
       colors: undefined,
-      strokeColors: '#fff',
+      strokeColors: "#fff",
       strokeOpacity: 0.9,
       strokeDashArray: 0,
       fillOpacity: 1,
@@ -75,12 +88,21 @@ const Chart = ({ data, categories, type, title }: ChartProps) => {
       showNullDataPoints: true,
       hover: {
         size: undefined,
-        sizeOffset: 3
-      }
+        sizeOffset: 3,
+      },
     } as ApexMarkers,
+    tooltip: {
+      enabled: true,
+      // it is to show noting tooltip on the chart
+      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+        return "";
+      },
+    } as ApexTooltip,
+   
+   
   });
   const [series] = createStore({
-    list: data,
+    list: props.data,
   });
 
   // options and series can be a store or signal
@@ -89,11 +111,10 @@ const Chart = ({ data, categories, type, title }: ChartProps) => {
     <SolidApexCharts
       width="100%"
       height="100%"
-      type={type}
+      type={props.type}
       options={options}
       series={series.list}
     />
-
   );
 };
 

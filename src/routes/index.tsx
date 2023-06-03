@@ -8,7 +8,7 @@ import {
   createResource,
   createSignal,
 } from "solid-js";
-import NineDaysForecast from "~/components/NineDaysForecast";
+import NineDaysForecast from "~/components/nineDaysForecast/NineDaysForecast";
 export default function Home() {
   return (
           <NineDaysForecast/>

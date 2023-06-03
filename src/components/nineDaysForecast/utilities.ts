@@ -2,31 +2,37 @@ import { Accessor, Resource } from "solid-js";
 import { Language, FndResponse } from "types/types";
 
 export const translate = {
-    updateTime: {
-      en: "Updated at： ",
-      tc: "更新時間： ",
-      sc: "更新时间： ",
+  updateTime: {
+    en: "Updated at： ",
+    tc: "更新時間： ",
+    sc: "更新时间： ",
+  },
+  subTitle: {
+    en: "General Situation:",
+    tc: "天氣概況:",
+    sc: "天气概况:",
+  },
+  title: {
+    en: "9-day Weather Forecast for Hong Kong",
+    tc: "香港九天天氣預報:",
+    sc: "香港九天天气预报:",
+  },
+  text: {
+    en: {
+      max: "maximum temperature",
+      min: "minimum temperature",
+      title: "Temperature (°C)",
     },
-    subTitle: {
-      en: "General Situation:",
-      tc: "天氣概況:",
-      sc: "天气概况:",
-    },
-    title: {
-      en: "9-day Weather Forecast for Hong Kong",
-      tc: "香港九天天氣預報:",
-      sc: "香港九天天气预报:",
-    },
-    text: {
-      en: {
-        max: "maximum temperature",
-        min: "minimum temperature",
-        title: "Temperature (°C)",
-      },
-      tc: { max: "最高温度", min: "最低温度", title: "溫度 (°C)" },
-      sc: { max: "最高溫度", min: " 最低溫度", title: "温度 (°C)" },
-    },
-  };
+    tc: { max: "最高温度", min: "最低温度", title: "溫度 (°C)" },
+    sc: { max: "最高溫度", min: " 最低溫度", title: "温度 (°C)" },
+  },
+};
+
+export const languageOption = {
+  en: "ENG",
+  tc: "繁",
+  sc: "简",
+};
 
 export function formatTime(time: string | undefined, lang: Accessor<Language>) {
   if (time) {
@@ -54,7 +60,7 @@ export function formatTime(time: string | undefined, lang: Accessor<Language>) {
         const formattedHoursCn = +hour % 12 === 0 ? "12" : String(+hour % 12);
         return {
           nineDaysForecastFormat: `${year}年${month}月${day}日${hour}時${minute}分`,
-          seaSoilFormat: `${year}年${month}月${day}日 ${amPmCn} ${formattedHoursCn}時$`,
+          seaSoilFormat: `${year}年${month}月${day}日 ${amPmCn} ${formattedHoursCn}時`,
         };
     }
   } else {
@@ -139,5 +145,51 @@ export function getTempArray(
     ],
     categories: categories,
     title: translate.text[`${lang()}`].title,
+  };
+}
+interface GetHumidityArrayProps {
+  nineDaysForecasting: Resource<FndResponse>;
+  lang: Accessor<Language>;
+}
+export function getHumidityArray(props: GetHumidityArrayProps) {
+  const text = {
+    en: {
+      max: "maximum relative humidity",
+      min: "minimum relative humidity ",
+      title: "Humidity (%)",
+    },
+    tc: { max: "最高相對濕度", min: "最低相對濕度 ", title: "相對濕度 (%)" },
+    sc: { max: "最高相对湿度", min: "最低相对湿度", title: "相对湿度 (%)" },
+  };
+
+  const humidity: { maxHumidity: number[]; minHumidity: number[] } = {
+    maxHumidity: [],
+    minHumidity: [],
+  };
+
+  const categories: string[][] = [];
+  
+  props.nineDaysForecasting()?.weatherForecast.map((info) => {
+    humidity.maxHumidity.push(info.forecastMaxrh.value);
+    humidity.minHumidity.push(info.forecastMinrh.value);
+    categories.push([
+      formatDate(info.forecastDate, props.lang),
+      formatWeek(info.week, props.lang),
+    ]);
+  });
+
+  return {
+    data: [
+      {
+        name: text[`${props.lang()}`].max,
+        data: humidity.maxHumidity,
+      },
+      {
+        name: text[`${props.lang()}`].min,
+        data: humidity.minHumidity,
+      },
+    ],
+    categories: categories,
+    title: text[`${props.lang()}`].title,
   };
 }
