@@ -21,7 +21,7 @@ import {
 } from "~/routes/api";
 import { FndResponse, Language, SeaSoliTempProps, TextProp } from "types/types";
 import language from "~/context/language";
-import Chart from "./Chart";
+// import Chart from "./Chart";
 import {
   formatTime,
   formatDate,
@@ -34,6 +34,8 @@ import {
   translateText,
 } from "~/components/nineDaysForecast/utilities";
 import { Dynamic } from "solid-js/web";
+import {  unstable_clientOnly } from "solid-start";
+const Chart = unstable_clientOnly(() => import('./Chart'));
 
 export default function NineDaysForecast() {
   const { lang, changeLan } = language;
