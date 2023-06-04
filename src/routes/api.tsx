@@ -7,7 +7,7 @@ import {
   getTempArray,
 } from "~/components/nineDaysForecast/utilities";
 import Chart from "~/components/nineDaysForecast/Chart";
-import { JSX } from "solid-js";
+import { JSX, createResource } from "solid-js";
 import { SolidApexCharts } from "solid-apexcharts";
 
 export const NineDaysForecasting = async (
@@ -141,3 +141,4 @@ export const TempDataForChartSc = async (): Promise<GetArrayResult> =>
         }
       });
     });
+

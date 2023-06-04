@@ -34,15 +34,22 @@ import {
   translateText,
 } from "~/components/nineDaysForecast/utilities";
 import { Dynamic } from "solid-js/web";
-import {  unstable_clientOnly } from "solid-start";
-const Chart = unstable_clientOnly(() => import('./Chart'));
+import {
+  createRouteData,
+  unstable_clientOnly,
+  useRouteData,
+} from "solid-start";
+const Chart = unstable_clientOnly(() => import("./Chart"));
 
-export default function NineDaysForecast() {
+
+
+
+export default  function NineDaysForecast() {
   const { lang, changeLan } = language;
   const [nineDaysForecasting] = createResource(lang, NineDaysForecasting);
-
+  
   const [showList, setShowList] = createSignal(false);
-
+  
   const SeaTempBlock = ({ lang, nineDaysForecasting }: SeaSoliTempProps) => {
     return (
       <Switch fallback={<p></p>}>
@@ -341,16 +348,37 @@ export default function NineDaysForecast() {
     );
   };
   //ApexChart library is not fully reactive, need to create multiple api for single chart
-  const [humidityDataForChartEn] = createResource(lang, HumidityDataForChartEn);
-  const [humidityDataForChartTc] = createResource(lang, HumidityDataForChartTc);
-  const [humidityDataForChartSc] = createResource(lang, HumidityDataForChartSc);
+  // const [humidityDataForChartEn] = createResource(lang, HumidityDataForChartEn);
+  // const [humidityDataForChartTc] = createResource(lang, HumidityDataForChartTc);
+  // const [humidityDataForChartSc] = createResource(lang, HumidityDataForChartSc);
+  const [humArrayEn] = createResource<GetArrayResult>(async () => {
+    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=en");
+    const res = await response.json()
+    const array = getHumidityArray({ nineDaysForecasting:res, lang: "en" });
+
+    return array;
+  });
+  const [humArrayTc] = createResource<GetArrayResult>(async () => {
+    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc");
+    const res = await response.json()
+    const array = getHumidityArray({ nineDaysForecasting:res, lang: "tc" });
+
+    return array;
+  });
+  const [humArraySc] = createResource<GetArrayResult>(async () => {
+    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=sc");
+    const res = await response.json()
+    const array = getHumidityArray({ nineDaysForecasting:res, lang: "sc" });
+
+    return array;
+  });
   const HumidityChartEn = () => {
     return (
       <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
         <Chart
           type="line"
           titleColor="#00adff"
-          array={humidityDataForChartEn()}
+          array={humArrayEn()}
         />
       </div>
     );
@@ -361,7 +389,7 @@ export default function NineDaysForecast() {
         <Chart
           type="line"
           titleColor="#00adff"
-          array={humidityDataForChartTc()}
+          array={humArrayTc()}
         />
       </div>
     );
@@ -372,33 +400,54 @@ export default function NineDaysForecast() {
         <Chart
           type="line"
           titleColor="#00adff"
-          array={humidityDataForChartSc()}
+          array={humArraySc()}
         />
       </div>
     );
   };
 
-  const [tempDataForChartEn] = createResource(lang, TempDataForChartEn);
-  const [tempDataForChartTc] = createResource(lang, TempDataForChartTc);
-  const [tempDataForChartSc] = createResource(lang, TempDataForChartSc);
+  // const [tempDataForChartEn] = createResource(lang, TempDataForChartEn);
+  // const [tempDataForChartTc] = createResource(lang, TempDataForChartTc);
+  // const [tempDataForChartSc] = createResource(lang, TempDataForChartSc);
+  const [temArrayEn] = createResource<GetArrayResult>(async () => {
+    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=en");
+    const res = await response.json()
+    const array = getTempArray({ nineDaysForecasting:res, lang: "en" });
+
+    return array;
+  });
+  const [temArrayTc] = createResource<GetArrayResult>(async () => {
+    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc");
+    const res = await response.json()
+    const array = getTempArray({ nineDaysForecasting:res, lang: "tc" });
+
+    return array;
+  });
+  const [temArraySc] = createResource<GetArrayResult>(async () => {
+    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=sc");
+    const res = await response.json()
+    const array = getTempArray({ nineDaysForecasting:res, lang: "sc" });
+
+    return array;
+  });
   const TempChartEn = () => {
     return (
       <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
-        <Chart type="line" titleColor="#ff7000" array={tempDataForChartEn()} />
+        <Chart type="line" titleColor="#ff7000" array={temArrayEn()} />
       </div>
     );
   };
   const TempChartTc = () => {
     return (
       <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
-        <Chart type="line" titleColor="#ff7000" array={tempDataForChartTc()} />
+        <Chart type="line" titleColor="#ff7000" array={temArrayTc()} />
       </div>
     );
   };
   const TempChartSc = () => {
     return (
       <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
-        <Chart type="line" titleColor="#ff7000" array={tempDataForChartSc()} />
+        <Chart type="line" titleColor="#ff7000" array={temArraySc()} />
       </div>
     );
   };
