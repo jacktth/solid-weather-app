@@ -521,7 +521,7 @@ export default  function NineDaysForecast() {
             <ListNineDaysForecasting />
           </Show>
 
-          <Switch fallback={<></>}>
+          <Switch fallback={<p>Error handling display, please refresh to show the chart</p>}>
             <Match when={lang() == "en"}>
               <TempChartEn />
             </Match>
@@ -532,7 +532,7 @@ export default  function NineDaysForecast() {
               <TempChartSc />
             </Match>
           </Switch>
-          <Switch fallback={<></>}>
+          <Switch fallback={<>Error handling display, please refresh to show the chart</>}>
             <Match when={lang() == "en"}>
               <HumidityChartEn />
             </Match>
