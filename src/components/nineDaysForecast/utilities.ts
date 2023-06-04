@@ -1,5 +1,5 @@
 import { Accessor, Resource } from "solid-js";
-import { Language, FndResponse } from "types/types";
+import { Language, FndResponse, TextProp } from "types/types";
 
 export const translate = {
   updateTime: {
@@ -71,8 +71,8 @@ export function formatTime(time: string | undefined, lang: Accessor<Language>) {
   }
 }
 
-export function formatWeek(date: string, lang: Accessor<Language>) {
-  switch (lang()) {
+export function formatWeek(date: string, lang: Language) {
+  switch (lang) {
     case "en":
       const week = date.slice(0, 3);
 
@@ -82,8 +82,8 @@ export function formatWeek(date: string, lang: Accessor<Language>) {
       return `(${date})`;
   }
 }
-export function formatDate(date: string, lang: Accessor<Language>) {
-  switch (lang()) {
+export function formatDate(date: string, lang: Language) {
+  switch (lang) {
     case "en":
       const monthEn = date.slice(4, 6);
       const dayEn = date.slice(6, 8);
@@ -113,45 +113,52 @@ export function formatDate(date: string, lang: Accessor<Language>) {
       return date;
   }
 }
-export function getTempArray(
-  nineDaysForecasting: Resource<FndResponse>,
-  lang: Accessor<Language>
-) {
+export function getTempArray(props: GetArrayProps): GetArrayResult {
   const temp: { maxTemp: number[]; minTemp: number[] } = {
     maxTemp: [],
     minTemp: [],
   };
 
   const categories: string[][] = [];
-  nineDaysForecasting()?.weatherForecast.map((info) => {
+  props.nineDaysForecasting.weatherForecast.map((info) => {
     temp.maxTemp.push(info.forecastMaxtemp.value);
     temp.minTemp.push(info.forecastMintemp.value);
+    
     categories.push([
-      formatDate(info.forecastDate, lang),
-      formatWeek(info.week, lang),
+      formatDate(info.forecastDate, props.lang),
+      formatWeek(info.week,props.lang),
     ]);
   });
 
   return {
     data: [
       {
-        name: translate.text[`${lang()}`].max,
+        name: translate.text[`${props.lang}`].max,
         data: temp.maxTemp,
       },
       {
-        name: translate.text[`${lang()}`].min,
+        name: translate.text[`${props.lang}`].min,
         data: temp.minTemp,
       },
     ],
     categories: categories,
-    title: translate.text[`${lang()}`].title,
+    title: translate.text[`${props.lang}`].title,
   };
 }
-interface GetHumidityArrayProps {
-  nineDaysForecasting: Resource<FndResponse>;
-  lang: Accessor<Language>;
+
+interface GetArrayProps {
+  nineDaysForecasting: FndResponse;
+  lang: Language;
 }
-export function getHumidityArray(props: GetHumidityArrayProps) {
+export type GetArrayResult = {
+  data: {
+    name: string;
+    data: number[];
+  }[];
+  categories: string[][];
+  title: string;
+};
+export function getHumidityArray(props: GetArrayProps): GetArrayResult {
   const text = {
     en: {
       max: "maximum relative humidity",
@@ -169,7 +176,7 @@ export function getHumidityArray(props: GetHumidityArrayProps) {
 
   const categories: string[][] = [];
   
-  props.nineDaysForecasting()?.weatherForecast.map((info) => {
+  props.nineDaysForecasting.weatherForecast.map((info) => {
     humidity.maxHumidity.push(info.forecastMaxrh.value);
     humidity.minHumidity.push(info.forecastMinrh.value);
     categories.push([
@@ -181,15 +188,28 @@ export function getHumidityArray(props: GetHumidityArrayProps) {
   return {
     data: [
       {
-        name: text[`${props.lang()}`].max,
+        name: text[`${props.lang}`].max,
         data: humidity.maxHumidity,
       },
       {
-        name: text[`${props.lang()}`].min,
+        name: text[`${props.lang}`].min,
         data: humidity.minHumidity,
       },
     ],
     categories: categories,
-    title: text[`${props.lang()}`].title,
+    title: text[`${props.lang}`].title,
   };
+}
+
+
+export function translateText(text:TextProp){
+  const texts = {
+    高:"High",
+    中高:"MediumHigh",
+    中:"Medium",
+    中低:"MediumLow",
+    低:"Low",
+
+  }
+  return texts[text]
 }

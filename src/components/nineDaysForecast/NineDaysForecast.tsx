@@ -2,7 +2,6 @@ import {
   Accessor,
   For,
   Match,
-  Resource,
   Show,
   Suspense,
   Switch,
@@ -10,11 +9,17 @@ import {
   createMemo,
   createResource,
   createSignal,
-  mergeProps,
-  splitProps,
 } from "solid-js";
-import { NineDaysForecasting } from "~/routes/api";
-import { FndResponse, Language, SeaSoliTempProps } from "types/types";
+import {
+  HumidityDataForChartEn,
+  HumidityDataForChartSc,
+  HumidityDataForChartTc,
+  NineDaysForecasting,
+  TempDataForChartEn,
+  TempDataForChartSc,
+  TempDataForChartTc,
+} from "~/routes/api";
+import { FndResponse, Language, SeaSoliTempProps, TextProp } from "types/types";
 import language from "~/context/language";
 import Chart from "./Chart";
 import {
@@ -25,12 +30,15 @@ import {
   translate,
   languageOption,
   getHumidityArray,
+  GetArrayResult,
+  translateText,
 } from "~/components/nineDaysForecast/utilities";
 import { Dynamic } from "solid-js/web";
 
 export default function NineDaysForecast() {
   const { lang, changeLan } = language;
   const [nineDaysForecasting] = createResource(lang, NineDaysForecasting);
+
   const [showList, setShowList] = createSignal(false);
 
   const SeaTempBlock = ({ lang, nineDaysForecasting }: SeaSoliTempProps) => {
@@ -151,9 +159,9 @@ export default function NineDaysForecast() {
               <div class=" sm:w-[130px] min-w-[120px] h-auto  border-solid border-[2px] mx-[2px] mt-[10px] mb-[2px] pt-[5px]  border-[#1F97FF]">
                 <div class="text-center">
                   <p class="text-[20.8px] ">
-                    {formatDate(info.forecastDate, lang)}
+                    {formatDate(info.forecastDate, lang())}
                   </p>
-                  <p class="text-[20.8px]">{formatWeek(info.week, lang)}</p>
+                  <p class="text-[20.8px]">{formatWeek(info.week, lang())}</p>
                   <div class="bg-[#1d496e] flex justify-center ">
                     <img
                       class="m-[6px]"
@@ -181,10 +189,11 @@ export default function NineDaysForecast() {
                     <img
                       width={40}
                       height={40}
-                      src={`https://www.hko.gov.hk/common/images/PSR${info.PSR.replace(
-                        " ",
-                        ""
-                      )}_50_light.png`}
+                      src={`https://www.hko.gov.hk/common/images/PSR${
+                        lang() === "en"
+                          ? info.PSR.replace(" ", "")
+                          : translateText(info.PSR as TextProp)
+                      }_50_light.png`}
                       alt=""
                     />
                     <span class="pl-[3px] break-words  my-auto text-[16px]">
@@ -215,9 +224,9 @@ export default function NineDaysForecast() {
                 <div class=" w-auto  h-auto flex  border-solid border-[2px] mx-[2px] mt-[10px] mb-[2px]  border-[#1F97FF]">
                   <div class="flex items-center text-start sm:w-[15%] p-[5px]">
                     <span class="text-[20.8px]">
-                      {formatDate(info.forecastDate, lang)}
+                      {formatDate(info.forecastDate, lang())}
                       <br />
-                      {formatWeek(info.week, lang)}
+                      {formatWeek(info.week, lang())}
                     </span>
                   </div>
 
@@ -248,10 +257,11 @@ export default function NineDaysForecast() {
                       <div class="sm:w-[40px] p-[5px] ">
                         <img
                           class=""
-                          src={`https://www.hko.gov.hk/common/images/PSR${info.PSR.replace(
-                            " ",
-                            ""
-                          )}_50_light.png`}
+                          src={`https://www.hko.gov.hk/common/images/PSR${
+                            lang() === "en"
+                              ? info.PSR.replace(" ", "")
+                              : translateText(info.PSR as TextProp)
+                          }_50_light.png`}
                           alt=""
                         />
                       </div>
@@ -271,9 +281,9 @@ export default function NineDaysForecast() {
               <div class=" sm:hidden flex  border-solid border-[2px]   border-[#1F97FF]">
                 <div class="items-center text-start   w-[40%] flex flex-col">
                   <div class="text-[17px] ">
-                    {formatDate(info.forecastDate, lang)}
+                    {formatDate(info.forecastDate, lang())}
                     <br />
-                    {formatWeek(info.week, lang)}
+                    {formatWeek(info.week, lang())}
                   </div>
                   <div class="bg-[#1d496e]  flex items-center justify-center w-full  flex-1">
                     <img
@@ -328,7 +338,68 @@ export default function NineDaysForecast() {
       </div>
     );
   };
+  //ApexChart library is not fully reactive, need to create multiple api for single chart
+  const [humidityDataForChartEn] = createResource(lang, HumidityDataForChartEn);
+  const [humidityDataForChartTc] = createResource(lang, HumidityDataForChartTc);
+  const [humidityDataForChartSc] = createResource(lang, HumidityDataForChartSc);
+  const HumidityChartEn = () => {
+    return (
+      <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
+        <Chart
+          type="line"
+          titleColor="#00adff"
+          array={humidityDataForChartEn()}
+        />
+      </div>
+    );
+  };
+  const HumidityChartTc = () => {
+    return (
+      <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
+        <Chart
+          type="line"
+          titleColor="#00adff"
+          array={humidityDataForChartTc()}
+        />
+      </div>
+    );
+  };
+  const HumidityChartSc = () => {
+    return (
+      <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
+        <Chart
+          type="line"
+          titleColor="#00adff"
+          array={humidityDataForChartSc()}
+        />
+      </div>
+    );
+  };
 
+  const [tempDataForChartEn] = createResource(lang, TempDataForChartEn);
+  const [tempDataForChartTc] = createResource(lang, TempDataForChartTc);
+  const [tempDataForChartSc] = createResource(lang, TempDataForChartSc);
+  const TempChartEn = () => {
+    return (
+      <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
+        <Chart type="line" titleColor="#ff7000" array={tempDataForChartEn()} />
+      </div>
+    );
+  };
+  const TempChartTc = () => {
+    return (
+      <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
+        <Chart type="line" titleColor="#ff7000" array={tempDataForChartTc()} />
+      </div>
+    );
+  };
+  const TempChartSc = () => {
+    return (
+      <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
+        <Chart type="line" titleColor="#ff7000" array={tempDataForChartSc()} />
+      </div>
+    );
+  };
   const eng = () => (
     <div class="cursor-pointer">
       <span onClick={() => changeLan("tc")}>繁</span>
@@ -399,28 +470,28 @@ export default function NineDaysForecast() {
             <ListNineDaysForecasting />
           </Show>
 
-          <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px] mb-2">
-            <Chart
-              data={getTempArray(nineDaysForecasting, lang).data}
-              categories={getTempArray(nineDaysForecasting, lang).categories}
-              type="line"
-              title={getTempArray(nineDaysForecasting, lang).title}
-              titleColor="#ff7000"
-            />
-          </div>
-
-          <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
-            <Chart
-              data={getHumidityArray({ nineDaysForecasting, lang }).data}
-              categories={
-                getHumidityArray({ nineDaysForecasting, lang }).categories
-              }
-              type="line"
-              title={getHumidityArray({ nineDaysForecasting, lang }).title}
-              titleColor="#00adff"
-            />
-          </div>
-
+          <Switch fallback={<></>}>
+            <Match when={lang() == "en"}>
+              <TempChartEn />
+            </Match>
+            <Match when={lang() == "tc"}>
+              <TempChartTc />
+            </Match>
+            <Match when={lang() == "sc"}>
+              <TempChartSc />
+            </Match>
+          </Switch>
+          <Switch fallback={<></>}>
+            <Match when={lang() == "en"}>
+              <HumidityChartEn />
+            </Match>
+            <Match when={lang() == "tc"}>
+              <HumidityChartTc />
+            </Match>
+            <Match when={lang() == "sc"}>
+              <HumidityChartSc />
+            </Match>
+          </Switch>
           <div class="flex justify-end mt-4">
             <p>
               {translate.updateTime[`${lang()}`]}

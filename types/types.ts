@@ -154,3 +154,4 @@ export type AreaWeatherData = {
 };
 
 
+export type TextProp = "高"|"中高"|"中"|"中低"|"低"
