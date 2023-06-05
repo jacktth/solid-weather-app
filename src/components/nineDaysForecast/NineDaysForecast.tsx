@@ -21,7 +21,8 @@ import {
 } from "~/routes/api";
 import { FndResponse, Language, SeaSoliTempProps, TextProp } from "types/types";
 import language from "~/context/language";
-// import Chart from "./Chart";
+import * as data from '../../../data/data.json';
+
 import {
   formatTime,
   formatDate,
@@ -354,57 +355,59 @@ export default  function NineDaysForecast() {
   const [humArrayEn] = createResource<GetArrayResult>(async () => {
     const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=en");
     const res = await response.json()
-    const array = getHumidityArray({ nineDaysForecasting:res, lang: "en" });
+    
+    
+    const array = await getHumidityArray({ nineDaysForecasting:res, lang: "en" });
 
     return array;
   });
-  // const [humArrayTc] = createResource<GetArrayResult>(async () => {
-  //   const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc");
-  //   const res = await response.json()
-  //   const array = getHumidityArray({ nineDaysForecasting:res, lang: "tc" });
+  const [humArrayTc] = createResource<GetArrayResult>(async () => {
+    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc");
+    const res = await response.json()
+    const array = await getHumidityArray({ nineDaysForecasting:res, lang: "tc" });
 
-  //   return array;
-  // });
-  // const [humArraySc] = createResource<GetArrayResult>(async () => {
-  //   const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=sc");
-  //   const res = await response.json()
-  //   const array = getHumidityArray({ nineDaysForecasting:res, lang: "sc" });
+    return array;
+  });
+  const [humArraySc] = createResource<GetArrayResult>(async () => {
+    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=sc");
+    const res = await response.json()
+    const array = await getHumidityArray({ nineDaysForecasting:res, lang: "sc" });
 
-  //   return array;
-  // });
+    return array;
+  });
   const HumidityChartEn = () => {
     return (
       <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
         <Chart
           type="line"
           titleColor="#00adff"
-          array={humArrayEn()}
+          array={data.hum.en}
         />
       </div>
     );
   };
-  // const HumidityChartTc = () => {
-  //   return (
-  //     <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
-  //       <Chart
-  //         type="line"
-  //         titleColor="#00adff"
-  //         array={humArrayTc()}
-  //       />
-  //     </div>
-  //   );
-  // };
-  // const HumidityChartSc = () => {
-  //   return (
-  //     <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
-  //       <Chart
-  //         type="line"
-  //         titleColor="#00adff"
-  //         array={humArraySc()}
-  //       />
-  //     </div>
-  //   );
-  // };
+  const HumidityChartTc = () => {
+    return (
+      <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
+        <Chart
+          type="line"
+          titleColor="#00adff"
+          array={data.hum.tc}
+        />
+      </div>
+    );
+  };
+  const HumidityChartSc = () => {
+    return (
+      <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
+        <Chart
+          type="line"
+          titleColor="#00adff"
+          array={data.hum.sc}
+        />
+      </div>
+    );
+  };
 
   // const [tempDataForChartEn] = createResource(lang, TempDataForChartEn);
   // const [tempDataForChartTc] = createResource(lang, TempDataForChartTc);
@@ -416,41 +419,41 @@ export default  function NineDaysForecast() {
 
     return array;
   });
-  // const [temArrayTc] = createResource<GetArrayResult>(async () => {
-  //   const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc");
-  //   const res = await response.json()
-  //   const array = getTempArray({ nineDaysForecasting:res, lang: "tc" });
+  const [temArrayTc] = createResource<GetArrayResult>(async () => {
+    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc");
+    const res = await response.json()
+    const array = getTempArray({ nineDaysForecasting:res, lang: "tc" });
 
-  //   return array;
-  // });
-  // const [temArraySc] = createResource<GetArrayResult>(async () => {
-  //   const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=sc");
-  //   const res = await response.json()
-  //   const array = getTempArray({ nineDaysForecasting:res, lang: "sc" });
+    return array;
+  });
+  const [temArraySc] = createResource<GetArrayResult>(async () => {
+    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=sc");
+    const res = await response.json()
+    const array = getTempArray({ nineDaysForecasting:res, lang: "sc" });
 
-  //   return array;
-  // });
+    return array;
+  });
   const TempChartEn = () => {
     return (
       <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
-        <Chart type="line" titleColor="#ff7000" array={temArrayEn()} />
+        <Chart type="line" titleColor="#ff7000" array={data.temp.en} />
       </div>
     );
   };
-  // const TempChartTc = () => {
-  //   return (
-  //     <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
-  //       <Chart type="line" titleColor="#ff7000" array={temArrayTc()} />
-  //     </div>
-  //   );
-  // };
-  // const TempChartSc = () => {
-  //   return (
-  //     <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
-  //       <Chart type="line" titleColor="#ff7000" array={temArraySc()} />
-  //     </div>
-  //   );
-  // };
+  const TempChartTc = () => {
+    return (
+      <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
+        <Chart type="line" titleColor="#ff7000" array={data.temp.tc} />
+      </div>
+    );
+  };
+  const TempChartSc = () => {
+    return (
+      <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
+        <Chart type="line" titleColor="#ff7000" array={data.temp.sc} />
+      </div>
+    );
+  };
   const eng = () => (
     <div class="cursor-pointer">
       <span onClick={() => changeLan("tc")}>繁</span>
@@ -522,26 +525,26 @@ export default  function NineDaysForecast() {
           </Show>
 
           <Switch fallback={<p>Error handling display, please refresh to show the chart</p>}>
-            <Match when={lang() }>
+            <Match when={lang() == "en"}>
               <TempChartEn />
             </Match>
-            {/* <Match when={lang() == "tc"}>
+            <Match when={lang() == "tc"}>
               <TempChartTc />
             </Match>
             <Match when={lang() == "sc"}>
               <TempChartSc />
-            </Match> */}
+            </Match>
           </Switch>
           <Switch fallback={<>Error handling display, please refresh to show the chart</>}>
-            <Match when={lang() }>
+            <Match when={lang() == "en"}>
               <HumidityChartEn />
             </Match>
-            {/* <Match when={lang() == "tc"}>
+            <Match when={lang() == "tc"}>
               <HumidityChartTc />
             </Match>
             <Match when={lang() == "sc"}>
               <HumidityChartSc />
-            </Match> */}
+            </Match>
           </Switch>
           <div class="flex justify-end mt-4">
             <p>
