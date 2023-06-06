@@ -348,33 +348,7 @@ export default  function NineDaysForecast() {
       </div>
     );
   };
-  //ApexChart library is not fully reactive, need to create multiple api for single chart
-  // const [humidityDataForChartEn] = createResource(lang, HumidityDataForChartEn);
-  // const [humidityDataForChartTc] = createResource(lang, HumidityDataForChartTc);
-  // const [humidityDataForChartSc] = createResource(lang, HumidityDataForChartSc);
-  const [humArrayEn] = createResource<GetArrayResult>(async () => {
-    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=en");
-    const res = await response.json()
-    
-    
-    const array = await getHumidityArray({ nineDaysForecasting:res, lang: "en" });
-
-    return array;
-  });
-  const [humArrayTc] = createResource<GetArrayResult>(async () => {
-    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc");
-    const res = await response.json()
-    const array = await getHumidityArray({ nineDaysForecasting:res, lang: "tc" });
-
-    return array;
-  });
-  const [humArraySc] = createResource<GetArrayResult>(async () => {
-    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=sc");
-    const res = await response.json()
-    const array = await getHumidityArray({ nineDaysForecasting:res, lang: "sc" });
-
-    return array;
-  });
+  
   const HumidityChartEn = () => {
     return (
       <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
@@ -408,31 +382,7 @@ export default  function NineDaysForecast() {
       </div>
     );
   };
-
-  // const [tempDataForChartEn] = createResource(lang, TempDataForChartEn);
-  // const [tempDataForChartTc] = createResource(lang, TempDataForChartTc);
-  // const [tempDataForChartSc] = createResource(lang, TempDataForChartSc);
-  const [temArrayEn] = createResource<GetArrayResult>(async () => {
-    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=en");
-    const res = await response.json()
-    const array = getTempArray({ nineDaysForecasting:res, lang: "en" });
-
-    return array;
-  });
-  const [temArrayTc] = createResource<GetArrayResult>(async () => {
-    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc");
-    const res = await response.json()
-    const array = getTempArray({ nineDaysForecasting:res, lang: "tc" });
-
-    return array;
-  });
-  const [temArraySc] = createResource<GetArrayResult>(async () => {
-    const response = await fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=sc");
-    const res = await response.json()
-    const array = getTempArray({ nineDaysForecasting:res, lang: "sc" });
-
-    return array;
-  });
+  
   const TempChartEn = () => {
     return (
       <div class="h-[400px] hidden md:block border-[0.8px] border-black chart-shadow p-[10px]">
@@ -524,7 +474,7 @@ export default  function NineDaysForecast() {
             <ListNineDaysForecasting />
           </Show>
 
-          <Switch fallback={<p>Error handling display, please refresh to show the chart</p>}>
+          <Switch fallback={<p>Chart displays fail due to connection problem</p>}>
             <Match when={lang() == "en"}>
               <TempChartEn />
             </Match>
@@ -535,7 +485,7 @@ export default  function NineDaysForecast() {
               <TempChartSc />
             </Match>
           </Switch>
-          <Switch fallback={<>Error handling display, please refresh to show the chart</>}>
+          <Switch fallback={<>Chart displays fail due to connection problem</>}>
             <Match when={lang() == "en"}>
               <HumidityChartEn />
             </Match>
