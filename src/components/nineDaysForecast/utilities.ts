@@ -14,8 +14,8 @@ export const translate = {
   },
   title: {
     en: "9-day Weather Forecast for Hong Kong",
-    tc: "香港九天天氣預報:",
-    sc: "香港九天天气预报:",
+    tc: "香港九天天氣預報",
+    sc: "香港九天天气预报",
   },
   text: {
     en: {
@@ -25,6 +25,11 @@ export const translate = {
     },
     tc: { max: "最高温度", min: "最低温度", title: "溫度 (°C)" },
     sc: { max: "最高溫度", min: " 最低溫度", title: "温度 (°C)" },
+  },
+  bulletinTitle: {
+    en: "Hong Kong Weather Forecast",
+    tc: "本港地區天氣預報",
+    sc: "本港地区天气预报",
   },
 };
 

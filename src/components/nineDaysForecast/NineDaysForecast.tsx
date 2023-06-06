@@ -11,13 +11,9 @@ import {
   createSignal,
 } from "solid-js";
 import {
-  HumidityDataForChartEn,
-  HumidityDataForChartSc,
-  HumidityDataForChartTc,
+
   NineDaysForecasting,
-  TempDataForChartEn,
-  TempDataForChartSc,
-  TempDataForChartTc,
+
 } from "~/routes/api";
 import { FndResponse, Language, SeaSoliTempProps, TextProp } from "types/types";
 import language from "~/context/language";
