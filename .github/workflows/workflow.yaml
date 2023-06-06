@@ -2,7 +2,7 @@ name: fetch nine days forecasting info
 run-name: updating forecasting info
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 16 * * *"
   
   workflow_dispatch:
 
