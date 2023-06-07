@@ -51,7 +51,7 @@ export default  function NineDaysForecast() {
     return (
       <Switch fallback={<p></p>}>
         <Match when={lang() === "en"}>
-          <div class="bg-[#f7f7f7] p-[10px] mr-[20px]">
+          <div class="bg-[#f7f7f7] p-[10px] mr-[20px] mb-1 sm:mb-0">
             <p>Sea surface temperature</p>
             <p>
               {
@@ -66,7 +66,7 @@ export default  function NineDaysForecast() {
           </div>
         </Match>
         <Match when={lang() === "tc"}>
-          <div class="bg-[#f7f7f7] p-[10px] mr-[20px]">
+          <div class="bg-[#f7f7f7] p-[10px] mr-[20px] mb-1 sm:mb-0">
             <p>
               {
                 formatTime(nineDaysForecasting()?.seaTemp.recordTime, lang)
@@ -82,7 +82,7 @@ export default  function NineDaysForecast() {
           </div>
         </Match>
         <Match when={lang() === "sc"}>
-          <div class="bg-[#f7f7f7] p-[10px] mr-[20px]">
+          <div class="bg-[#f7f7f7] p-[10px] mr-[20px] mb-1 sm:mb-0">
             <p>
               {
                 formatTime(nineDaysForecasting()?.seaTemp.recordTime, lang)
@@ -222,7 +222,7 @@ export default  function NineDaysForecast() {
   };
   const ListNineDaysForecasting = () => {
     return (
-      <div class="text-center flex flex-col gap-[2px] justify-center">
+      <div class="text-center flex flex-col gap-[2px] justify-center mt-1 sm:mt-0">
         <For each={nineDaysForecasting()?.weatherForecast}>
           {(info) => (
             <>
@@ -469,7 +469,7 @@ export default  function NineDaysForecast() {
               <HumidityChartSc />
             </Match>
           </Switch>
-          <div class="flex justify-end mt-4">
+          <div class="flex justify-end my-4">
             <p>
               {translate.updateTime[`${lang()}`]}
               {
