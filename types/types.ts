@@ -155,3 +155,14 @@ export type AreaWeatherData = {
 
 
 export type TextProp = "高"|"中高"|"中"|"中低"|"低"
+
+
+export type WeatherForcastFlw =  {
+  generalSituation: string
+  tcInfo: string
+  fireDangerWarning: string
+  forecastPeriod: string
+  forecastDesc: string
+  outlook: string
+  updateTime: string
+  }
