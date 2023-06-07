@@ -400,29 +400,7 @@ export default  function NineDaysForecast() {
       </div>
     );
   };
-  const eng = () => (
-    <div class="cursor-pointer">
-      <span onClick={() => changeLan("tc")}>繁</span>
-      <span onClick={() => changeLan("sc")}>简</span>
-    </div>
-  );
-  const tc = () => (
-    <div class="cursor-pointer">
-      <span onClick={() => changeLan("en")}>ENG</span>
-      <span onClick={() => changeLan("sc")}>简</span>
-    </div>
-  );
-  const sc = () => (
-    <div class="cursor-pointer">
-      <span onClick={() => changeLan("en")}>ENG</span>
-      <span onClick={() => changeLan("tc")}>繁</span>
-    </div>
-  );
-  const options = {
-    en: eng,
-    tc: tc,
-    sc: sc,
-  };
+
   return (
     <div class="bg-[#ebf3f6]  ">
       <div class=" sm:px-[40px]  sm:max-w-[1280px] sm:w-[90%] w-[95%] mx-auto ">
@@ -431,7 +409,6 @@ export default  function NineDaysForecast() {
             {translate.title[`${lang()}`]}
           </h1>
           <div class="flex">
-            <Dynamic component={options[lang()]} />
             <Show
               when={showList()}
               fallback={
@@ -497,7 +474,7 @@ export default  function NineDaysForecast() {
               {translate.updateTime[`${lang()}`]}
               {
                 formatTime(nineDaysForecasting()?.updateTime, lang)
-                  .nineDaysForecastFormat
+                  .normalFormat
               }
             </p>
           </div>

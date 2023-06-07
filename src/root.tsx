@@ -1,5 +1,5 @@
 // @refresh reload
-import { Suspense } from "solid-js";
+import {  Suspense, createSignal } from "solid-js";
 import {
   useLocation,
   A,
@@ -18,36 +18,64 @@ import "./root.css";
 import language from "./context/language";
 import { translate } from "./components/nineDaysForecast/utilities";
 import { Dynamic } from "solid-js/web";
-import { Language } from "types/types";
 
 export default function Root() {
   const { lang, changeLan } = language;
+  const [dropDown, setDropDown] = createSignal(false);
   const location = useLocation();
   const active = (path: string) =>
     path == location.pathname
       ? "border-white"
       : "border-transparent hover:border-white";
-      const langActive = (langSelect: Language) =>
-      langSelect == lang()
-      ? "border-white"
-      : "border-transparent hover:border-white";
+  const dropping = (drop:boolean) =>
+  drop ? "bg-blue-300 text-center text-lg" :"flex"
   const eng = () => (
-    <div class="cursor-pointer">
-      <span class={`hover:border-white border-transparent border-b-2`} onClick={() => changeLan("tc")}>繁</span>
-      <span class={`hover:border-white border-transparent border-b-2`} onClick={() => changeLan("sc")}>简</span>
-    </div>
+    <ul class={`cursor-pointer ${dropping(dropDown())}`}>
+      <li
+        class={`hover:border-white border-transparent border-b-2 sm:px-0 px-2`}
+        onClick={() => changeLan("tc")}
+      >
+        繁
+      </li>
+      <li
+        class={`hover:border-white border-transparent border-b-2 sm:px-0 px-2 ${dropDown() ?"":"ml-1"}`}
+        onClick={() => changeLan("sc")}
+      >
+        简
+      </li>
+    </ul>
   );
   const tc = () => (
-    <div class="cursor-pointer">
-      <span class={`hover:border-white border-transparent border-b-2`} onClick={() => changeLan("en")}>ENG</span>
-      <span class={`hover:border-white border-transparent border-b-2`} onClick={() => changeLan("sc")}>简</span>
-    </div>
+    <ul class={`cursor-pointer ${dropping(dropDown())}`}>
+      <li
+        class={`hover:border-white border-transparent border-b-2`}
+        onClick={() => changeLan("en")}
+      >
+        ENG
+      </li>
+      <li
+        class={`hover:border-white border-transparent border-b-2  ${dropDown() ?"":"ml-1"}`}
+        onClick={() => changeLan("sc")}
+      >
+        简
+      </li>
+    </ul>
   );
   const sc = () => (
-    <div class="cursor-pointer">
-      <span class={`hover:border-white border-transparent border-b-2`} onClick={() => changeLan("en")}>ENG</span>
-      <span class={`hover:border-white border-transparent border-b-2`} onClick={() => changeLan("tc")}>繁</span>
-    </div>
+    <ul class={`cursor-pointer ${dropping(dropDown())}`}>
+      <li
+        class={`hover:border-white border-transparent border-b-2`}
+        onClick={() => changeLan("en")}
+      >
+        ENG
+      </li>
+      <li
+        class={`hover:border-white border-transparent border-b-2 ${dropDown() ?"":"ml-1"}`}
+        onClick={() => changeLan("tc")}
+      >
+        繁
+      </li>
+    </ul>
   );
   const options = {
     en: eng,
@@ -64,16 +92,35 @@ export default function Root() {
       <Body>
         <Suspense>
           <ErrorBoundary>
-            <nav class="bg-[#1A58AB]">
-              <ul class="container flex items-center text-lg p-3 text-white justify-center">
+            <nav class="bg-[#1A58AB] relative">
+              <ul class=" flex items-center text-base sm:text-lg p-3 text-white justify-center">
+                <div></div>
                 <li class={`border-b-2 ${active("/")} mx-1.5 sm:mx-6`}>
                   <A href="/">{translate.title[`${lang()}`]}</A>
                 </li>
                 <li class={`border-b-2 ${active("/about")} mx-1.5 sm:mx-6`}>
                   <A href="/flw">{translate.bulletinTitle[`${lang()}`]}</A>
                 </li>
-                <li class={` mx-1.5 sm:mx-6`}>
+                <li class={` mx-1.5 sm:mx-6  absolute right-0 sm:static mr-5 sm:mr-0 sm:block flex items-center`}>
+                  <div
+                    class="sm:hidden w-[24px] cursor-pointer relative"
+                    onfocus={() => {
+                      setDropDown(true);
+                    }}
+                    onFocusOut={() => {
+                      setDropDown(false);
+                    }}
+                    tabindex="0"
+                  >
+                    <img src="world.svg" alt="" />
+                    <div class={`${dropDown() ? "absolute left-1/2 translate-x-[-50%]  text-black " : "hidden"} `}>
+                      <Dynamic component={options[lang()]} />
+                    </div>
+                  </div>
+                  <div class="hidden sm:block">
                   <Dynamic component={options[lang()]} />
+
+                  </div>
                 </li>
               </ul>
             </nav>

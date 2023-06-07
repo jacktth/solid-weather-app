@@ -54,7 +54,7 @@ export function formatTime(time: string | undefined, lang: Accessor<Language>) {
         const formattedHours =
           +hour % 12 === 0 ? "12" : "0" + String(+hour % 12);
         return {
-          nineDaysForecastFormat: `${hour}:${minute} HKT ${day}/${enMonth}/${year}`,
+          normalFormat: `${hour}:${minute} HKT ${day}/${enMonth}/${year}`,
           seaSoilFormat: `${
             formattedHours + " " + amPm
           } on ${day}/${enMonth}/${year}`,
@@ -64,13 +64,13 @@ export function formatTime(time: string | undefined, lang: Accessor<Language>) {
         const amPmCn = +hour >= 12 ? "下午" : "上午";
         const formattedHoursCn = +hour % 12 === 0 ? "12" : String(+hour % 12);
         return {
-          nineDaysForecastFormat: `${year}年${month}月${day}日${hour}時${minute}分`,
+          normalFormat: `${year}年${month}月${day}日${hour}時${minute}分`,
           seaSoilFormat: `${year}年${month}月${day}日 ${amPmCn} ${formattedHoursCn}時`,
         };
     }
   } else {
     return {
-      nineDaysForecastFormat: `N/A`,
+      normalFormat: `N/A`,
       seaSoilFormat: `N/A`,
     };
   }
